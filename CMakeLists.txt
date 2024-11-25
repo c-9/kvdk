@@ -96,6 +96,10 @@ set(KVDK_PUBLIC_HEADERS
     ${PROJECT_SOURCE_DIR}/include/kvdk/engine.h
     ${PROJECT_SOURCE_DIR}/include/kvdk/engine.hpp
     ${PROJECT_SOURCE_DIR}/include/kvdk/iterator.hpp
+    ${PROJECT_SOURCE_DIR}/include/kvdk/snapshot.hpp
+    ${PROJECT_SOURCE_DIR}/include/kvdk/transaction.hpp
+    ${PROJECT_SOURCE_DIR}/include/kvdk/types.hpp
+    ${PROJECT_SOURCE_DIR}/include/kvdk/types.h
     ${PROJECT_SOURCE_DIR}/include/kvdk/write_batch.hpp
     ${PROJECT_SOURCE_DIR}/extern/libpmemobj++/string_view.hpp
 )

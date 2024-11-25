@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "types.hpp"
+#include "kvdk/types.hpp"
 
 namespace KVDK_NAMESPACE {
 // This struct is used to do transaction operations. A transaction struct is

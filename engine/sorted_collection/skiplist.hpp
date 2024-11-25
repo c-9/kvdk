@@ -46,7 +46,7 @@ struct SortedWriteArgs {
  * cached key We only cache key if height > kCache height or there are enough
  * space in the end of malloced space to cache the key (4B here).
  * */
-struct SkiplistNode {
+class SkiplistNode {
  public:
   SkiplistNode(const SkiplistNode&) = delete;
   SkiplistNode& operator=(const SkiplistNode&) = delete;

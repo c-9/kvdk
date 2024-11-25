@@ -6,8 +6,8 @@
 
 #include <string>
 
-#include "comparator.hpp"
-#include "types.hpp"
+#include "kvdk/comparator.hpp"
+#include "kvdk/types.hpp"
 
 namespace KVDK_NAMESPACE {
 

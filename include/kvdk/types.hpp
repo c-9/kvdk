@@ -5,7 +5,7 @@
 #include <string>
 
 #include "libpmemobj++/string_view.hpp"
-#include "types.h"
+#include "kvdk/types.h"
 
 namespace KVDK_NAMESPACE {
 using StringView = pmem::obj::string_view;

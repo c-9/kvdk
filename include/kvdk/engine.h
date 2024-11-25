@@ -12,7 +12,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-#include "types.h"
+#include "kvdk/types.h"
 
 typedef struct KVDKEngine KVDKEngine;
 typedef struct KVDKConfigs KVDKConfigs;

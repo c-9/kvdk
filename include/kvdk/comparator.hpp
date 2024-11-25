@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "types.hpp"
+#include "kvdk/types.hpp"
 
 namespace KVDK_NAMESPACE {
 using StringView = pmem::obj::string_view;

@@ -7,13 +7,13 @@
 #include <memory>
 #include <string>
 
-#include "comparator.hpp"
-#include "configs.hpp"
-#include "iterator.hpp"
-#include "snapshot.hpp"
-#include "transaction.hpp"
-#include "types.hpp"
-#include "write_batch.hpp"
+#include "kvdk/comparator.hpp"
+#include "kvdk/configs.hpp"
+#include "kvdk/iterator.hpp"
+#include "kvdk/snapshot.hpp"
+#include "kvdk/transaction.hpp"
+#include "kvdk/types.hpp"
+#include "kvdk/write_batch.hpp"
 
 namespace kvdk = KVDK_NAMESPACE;
 

@@ -9,7 +9,7 @@
 
 #include "../alias.hpp"
 #include "kvdk/configs.hpp"
-#include "kvdk/engine.h"
+// #include "kvdk/engine.h"
 #include "kvdk/engine.hpp"
 #include "kvdk/iterator.hpp"
 #include "kvdk/transaction.hpp"

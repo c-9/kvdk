@@ -44,7 +44,7 @@ struct Configs {
   // Notice that it should be larger than (max_access_threads *
   // pmem_segment_blocks  * pmem_block_size)
   // TODO: sacle out
-  uint64_t pmem_file_size = (256ULL << 30);
+  uint64_t pmem_file_size = (64ULL << 30);
 
   // Populate PMem space while creating a new instance.
   //

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <immintrin.h>
-#include <libpmem.h>
+#include "libpmem.h"
 #include <x86intrin.h>
 
 #include "alias.hpp"

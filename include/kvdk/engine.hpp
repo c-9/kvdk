@@ -18,6 +18,7 @@
 namespace kvdk = KVDK_NAMESPACE;
 
 namespace KVDK_NAMESPACE {
+using StringView = pmem::obj::string_view;
 // This is the abstraction of a persistent KVDK instance
 class Engine {
  public:
@@ -33,7 +34,7 @@ class Engine {
   // Return Status::Ok on sucess, return other status for any error
   //
   // To close the instance, just delete *engine_ptr.
-  static Status Open(const StringView engine_path, Engine** engine_ptr,
+  static Status Open(const pmem::obj::string_view engine_path, Engine** engine_ptr,
                      const Configs& configs, FILE* log_file = stdout);
 
   // Restore a KVDK instance from a backup log file.

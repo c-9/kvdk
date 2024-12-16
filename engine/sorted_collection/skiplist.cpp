@@ -4,7 +4,7 @@
 
 #include "skiplist.hpp"
 
-#include <libpmem.h>
+#include "libpmem.h"
 
 #include <algorithm>
 #include <future>

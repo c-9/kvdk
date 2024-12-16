@@ -84,10 +84,14 @@ set(SOURCES
         engine/version/old_records_cleaner.cpp
     )
 
+find_path(PMEM_INCLUDE_DIR libpmem.h HINTS ${PMEM_ROOT}/include)
+find_library(PMEM_LIBRARY NAMES pmem HINTS ${PMEM_ROOT}/lib)
+find_library(PMEMOBJ_LIBRARY NAMES pmemobj HINTS ${PMEM_ROOT}/lib)
+
 # .so library
 add_library(engine SHARED ${SOURCES})
-target_include_directories(engine PUBLIC ./include ./extern)
-target_link_libraries(engine PUBLIC pthread pmem gflags hwloc atomic)
+target_include_directories(engine PUBLIC ./include ./extern ${PMEM_INCLUDE_DIR})
+target_link_libraries(engine PUBLIC pthread ${PMEM_LIBRARY} ${PMEMOBJ_LIBRARY} gflags hwloc atomic)
 
 configure_file(kvdk.pc.in kvdk.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kvdk.pc

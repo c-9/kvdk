@@ -5,7 +5,7 @@
 #include "kv_engine.hpp"
 
 #include <dirent.h>
-#include <libpmem.h>
+#include "libpmem.h"
 #include <sys/mman.h>
 
 #include <algorithm>

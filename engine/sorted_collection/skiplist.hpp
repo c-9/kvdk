@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cstdint>
 #include <thread>
+#include <array>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -46,7 +47,7 @@ struct SortedWriteArgs {
  * cached key We only cache key if height > kCache height or there are enough
  * space in the end of malloced space to cache the key (4B here).
  * */
-class SkiplistNode {
+struct SkiplistNode {
  public:
   SkiplistNode(const SkiplistNode&) = delete;
   SkiplistNode& operator=(const SkiplistNode&) = delete;
@@ -532,12 +533,15 @@ class Skiplist : public Collection {
 struct Splice {
   // Seeking skiplist
   Skiplist* seeking_list;
-  std::array<SkiplistNode*, kMaxHeight + 1> nexts{nullptr};
-  std::array<SkiplistNode*, kMaxHeight + 1> prevs{nullptr};
+  std::array<SkiplistNode*, kMaxHeight + 1> nexts;
+  std::array<SkiplistNode*, kMaxHeight + 1> prevs;
   DLRecord* prev_pmem_record{nullptr};
   DLRecord* next_pmem_record{nullptr};
 
-  Splice(Skiplist* s) : seeking_list(s) {}
+  Splice(Skiplist* s) : seeking_list(s) {
+    nexts.fill(nullptr);
+    prevs.fill(nullptr);
+  }
 
   void Recompute(const StringView& key, uint8_t l) {
     SkiplistNode* start_node;

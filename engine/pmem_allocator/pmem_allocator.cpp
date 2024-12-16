@@ -4,7 +4,7 @@
 
 #include "pmem_allocator.hpp"
 
-#include <libpmem.h>
+#include "libpmem.h"
 #include <sys/sysmacros.h>
 
 #include <thread>
@@ -57,6 +57,78 @@ void PMEMAllocator::populateSpace() {
   }
   _mm_mfence();
   GlobalLogger.Info("Populating done\n");
+}
+
+void PMEMAllocator::populateSpaceFast(int num_threads) {
+  GlobalLogger.Info("Fast Populating PMem space ...\n");
+  const size_t page_size = sysconf(_SC_PAGESIZE);
+  std::vector<std::thread> threads;
+  size_t chunk_size = pmem_size_ / num_threads;
+
+  for (int i = 0; i < num_threads; i++) {
+    threads.emplace_back([=]() {
+      char* start = pmem_ + (i * chunk_size);
+      size_t len = (i == num_threads - 1) ? pmem_size_ - (i * chunk_size)
+                                                 : chunk_size;
+
+      for (size_t offset = 0; offset < len; offset += page_size) {
+        start[offset] = start[offset];
+      }
+    });
+  }
+
+  for (auto& t : threads) {
+    t.join();
+  }
+  _mm_mfence();
+  GlobalLogger.Info("Populating done\n");
+}
+
+bool PMEMAllocator::isPagePopulated(void* addr) {
+    const size_t page_size = sysconf(_SC_PAGESIZE);
+    uint64_t page_frame_number = 0;
+    int fd = open("/proc/self/pagemap", O_RDONLY);
+    
+    if (fd < 0) return false;
+    
+    // Calculate the index in pagemap
+    uint64_t offset = (reinterpret_cast<uint64_t>(addr) / page_size) * sizeof(uint64_t);
+    if (pread(fd, &page_frame_number, sizeof(uint64_t), offset) != sizeof(uint64_t)) {
+        close(fd);
+        return false;
+    }
+    close(fd);
+    
+    // Bit 63 indicates if page is present
+    return (page_frame_number & (1ULL << 63)) != 0;
+}
+
+bool PMEMAllocator::checkPagePopulation() {
+  GlobalLogger.Info("Population Check ...\n");
+  const size_t page_size = sysconf(_SC_PAGESIZE);
+  size_t count = 0;
+    for (size_t i = 0; i < pmem_size_ / page_size; i++) {
+        if (!isPagePopulated(pmem_ + i * 64)) {
+            return false;
+        }
+        count++;
+    }
+    GlobalLogger.Info("Population Check done, %lu pages are populated\n", count);
+    return true;
+}
+
+bool PMEMAllocator::checkPopulationFast() {
+  GlobalLogger.Info("Population Check with mincore ...\n");
+  const size_t page_size = sysconf(_SC_PAGESIZE);
+  size_t num_pages = (pmem_size_ + page_size - 1) / page_size;
+  std::vector<unsigned char> vec(num_pages);
+  
+  if (mincore(pmem_, pmem_size_, vec.data()) != 0) {
+      return false;
+  }
+  // Check if all pages are in memory
+  return std::all_of(vec.begin(), vec.end(), 
+                    [](unsigned char v) { return v & 1; });
 }
 
 PMEMAllocator::~PMEMAllocator() { pmem_unmap(pmem_, pmem_size_); }
@@ -165,6 +237,9 @@ PMEMAllocator* PMEMAllocator::NewPMEMAllocator(
 
   if (!pmem_file_exist && populate_space_on_new_file) {
     allocator->populateSpace();
+    // allocator->populateSpaceFast(max_access_threads);
+    allocator->checkPagePopulation();
+    // allocator->checkPopulationFast();
   }
 
   return allocator;

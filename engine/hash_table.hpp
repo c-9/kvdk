@@ -19,7 +19,7 @@
 namespace KVDK_NAMESPACE {
 
 class Skiplist;
-class SkiplistNode;
+struct SkiplistNode;
 struct HashBucketIterator;
 
 struct List;

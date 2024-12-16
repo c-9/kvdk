@@ -165,9 +165,10 @@ class PMEMAllocator : public Allocator {
   // Populate PMem space so the following access can be faster
   // Warning! this will zero the entire PMem space
   void populateSpace();
-  void populateSpaceFast(int num_threads);
+  void populateSpaceFast();
+  void populateSpaceMT(int num_threads);
   bool isPagePopulated(void* addr);
-  bool checkPagePopulation();
+  bool checkPopulation();
   bool checkPopulationFast();
 
   void init_data_size_2_block_size() {

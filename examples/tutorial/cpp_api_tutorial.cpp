@@ -10,7 +10,8 @@
 #include <string>
 #include <thread>
 #include <vector>
-
+// #undef __cpp_lib_string_view
+#include "kvdk/string_view.hpp"
 #include "kvdk/engine.hpp"
 
 #define DEBUG  // For assert
@@ -426,11 +427,18 @@ int main() {
   }
   std::string engine_path{pmem_path};
 
+  // Convert std::string to pmem::obj::basic_string_view explicitly
+  StringView path_view(engine_path.data(), engine_path.size());
+  
   // Purge old KVDK instance
   [[gnu::unused]] int sink =
       system(std::string{"rm -rf " + engine_path + "\n"}.c_str());
 
-  status = kvdk::Engine::Open(engine_path, &engine, engine_configs, stdout);
+  status = kvdk::Engine::Open(
+      path_view,  // Use our explicitly created StringView
+      &engine,
+      engine_configs,
+      stdout);
   assert(status == kvdk::Status::Ok);
   printf("Successfully opened a KVDK instance.\n");
 

@@ -22,7 +22,7 @@ using kvdk::Snapshot;
 // The KVDK instance is mounted as a directory
 // /mnt/pmem0/tutorial_kvdk_example.
 // Modify this path if necessary.
-const char* pmem_path = "/mnt/pmem0/tutorial_kvdk_example";
+const char* pmem_path = "/mnt/pmem2/zjq/tutorial_kvdk_example";
 
 kvdk::Status status;
 kvdk::Engine* engine = nullptr;
@@ -125,6 +125,12 @@ static void test_named_coll() {
   // not deleted though.
   status = engine->SortedDelete(collection1, key1);
   assert(status == kvdk::Status::Ok);
+  
+  status = engine->SortedCreate(collection2);
+  assert(status == kvdk::Status::Existed);
+  status = engine->SortedGet(collection2, key2, &v);
+  assert(status == kvdk::Status::Ok);
+  assert(v == value2);
 
   printf(
       "Successfully performed SortedGet, SortedPut, SortedDelete operations on "
@@ -377,7 +383,7 @@ static void test_expire() {
     std::string hash_collection = "hash_collection";
     std::string key = "hashkey";
     std::string val = "hashval";
-
+    std::string v;
     // case: default persist key
     s = engine->HashCreate(hash_collection);
     assert(s == kvdk::Status::Ok);
@@ -386,6 +392,11 @@ static void test_expire() {
     s = engine->GetTTL(hash_collection, &ttl_time);
     assert(s == kvdk::Status::Ok);
     assert(ttl_time == kvdk::kPersistTime);
+
+    status = engine->HashCreate(hash_collection);
+    assert(status == kvdk::Status::Existed);
+    status = engine->HashGet(hash_collection, key, &v);
+    assert(status == kvdk::Status::Ok);
 
     // case: set expire_time
     s = engine->Expire(hash_collection, 1);
